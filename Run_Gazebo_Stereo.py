@@ -41,7 +41,7 @@ for iteration in range(0, Num_Repeating):
 
         # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
         cmd_slam   = str('LD_PRELOAD=/home/yipuzhao/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros gazebo_stereo_only.launch')
-        cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /svo/pose_cam/0 /svo/pose_cam/1 /tf')
+        cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf /tf __name:=rec_bag')
         cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -r 0.3'
         print bcolors.WARNING + "cmd_slam: \n"   + cmd_slam   + bcolors.ENDC
         print bcolors.WARNING + "cmd_record: \n" + cmd_record + bcolors.ENDC
@@ -49,12 +49,17 @@ for iteration in range(0, Num_Repeating):
 
         print bcolors.OKGREEN + "Launching SLAM" + bcolors.ENDC
         proc_slam = subprocess.Popen(cmd_slam, shell=True)
+        # proc_slam = subprocess.Popen("exec " + cmd_slam, stdout=subprocess.PIPE, shell=True)
 
         print bcolors.OKGREEN + "Recording tf" + bcolors.ENDC
         proc_rec = subprocess.Popen(cmd_record, shell=True)
+        # proc_rec = subprocess.Popen("exec " + cmd_record, stdout=subprocess.PIPE, shell=True)
 
         print bcolors.OKGREEN + "Sleeping for a few secs to wait for svo init" + bcolors.ENDC
         time.sleep(SleepTime)
 
         print bcolors.OKGREEN + "Launching rosbag" + bcolors.ENDC
         proc_bag = subprocess.call(cmd_rosbag, shell=True)
+
+        print bcolors.OKGREEN + "Finished rosbag playback, kill the process" + bcolors.ENDC
+        subprocess.call('rosnode kill /rec_bag', shell=True)
