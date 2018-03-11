@@ -5,7 +5,7 @@ import subprocess
 import time
 import signal
 
-# SeqNameList = ['V1_01_easy'];
+# SeqNameList = ['MH_01_easy'];
 # SeqNameList = ['V1_03_difficult', 'V2_02_medium', 'V2_03_difficult'];
 SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
 Result_root = '/mnt/DATA/tmp/EuRoC/SVO2/'
@@ -36,7 +36,7 @@ for iteration in range(0, Num_Repeating):
         
         print bcolors.ALERT + "====================================================================" + bcolors.ENDC
 
-        SeqName = SeqNameList[sn]
+        SeqName = SeqNameList[sn] + '_blur_9'
         print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
         File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
