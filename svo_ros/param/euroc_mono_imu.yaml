@@ -1,5 +1,5 @@
 grid_size: 35
-use_imu: True
+use_imu: False # True # 
 poseoptim_prior_lambda: 0.0
 img_align_prior_lambda_rot: 0.5
 img_align_prior_lambda_trans: 0.0
