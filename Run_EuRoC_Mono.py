@@ -41,8 +41,8 @@ for iteration in range(0, Num_Repeating):
         File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
 
         # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
-	cmd_slam   = str('roslaunch svo_ros euroc_mono_only.launch')
-        cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_pose /svo/pose_cam/0 __name:=rec_bag')
+        cmd_slam   = str('roslaunch svo_ros euroc_mono_only.launch')
+        cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
         cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -r 0.3'
         print bcolors.WARNING + "cmd_slam: \n"   + cmd_slam   + bcolors.ENDC
         print bcolors.WARNING + "cmd_record: \n" + cmd_record + bcolors.ENDC
@@ -52,7 +52,7 @@ for iteration in range(0, Num_Repeating):
         proc_slam = subprocess.Popen(cmd_slam, shell=True)
         # proc_slam = subprocess.Popen("exec " + cmd_slam, stdout=subprocess.PIPE, shell=True)
 
-        print bcolors.OKGREEN + "Recording cam0 pose" + bcolors.ENDC
+        print bcolors.OKGREEN + "Recording tf" + bcolors.ENDC
         proc_rec = subprocess.Popen(cmd_record, shell=True)
         # proc_rec = subprocess.Popen("exec " + cmd_record, stdout=subprocess.PIPE, shell=True)
 

@@ -40,8 +40,9 @@ for iteration in range(0, Num_Repeating):
         File_rosbag  = '/mnt/DATA/Datasets/GazeboMaze/' + SeqName + '.bag'
 
         # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
-        cmd_slam   = str('LD_PRELOAD=/home/yipuzhao/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros gazebo_stereo_only.launch')
-        cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf /tf __name:=rec_bag')
+        # cmd_slam   = str('LD_PRELOAD=/home/yipuzhao/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros gazebo_stereo_only.launch')
+        cmd_slam   = str('roslaunch svo_ros gazebo_stereo_only.launch')
+        cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
         cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -r 0.3'
         print bcolors.WARNING + "cmd_slam: \n"   + cmd_slam   + bcolors.ENDC
         print bcolors.WARNING + "cmd_record: \n" + cmd_record + bcolors.ENDC
