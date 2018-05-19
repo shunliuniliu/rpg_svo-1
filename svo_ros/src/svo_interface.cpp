@@ -192,6 +192,8 @@ void SvoInterface::monoCallback(const sensor_msgs::ImageConstPtr& msg)
   if(idle_)
     return;
 
+ros::Time time_st = ros::Time::now();
+
   cv::Mat image;
   try
   {
@@ -212,10 +214,17 @@ void SvoInterface::monoCallback(const sensor_msgs::ImageConstPtr& msg)
   processImageBundle(images, msg->header.stamp.toNSec());
   publishResults(images, msg->header.stamp.toNSec());
 
+ros::Duration time_1 = ros::Time::now() - time_st;
+
   if(svo_->stage() == Stage::kPaused && automatic_reinitialization_)
     svo_->start();
 
   imageCallbackPostprocessing();
+
+ros::Duration time_2 = ros::Time::now() - time_st;
+
+logTimeCost.push_back(timeLog(msg->header.stamp.toSec(), time_1.toSec(), time_2.toSec()));
+
 }
 
 void SvoInterface::stereoCallback(
@@ -224,6 +233,8 @@ void SvoInterface::stereoCallback(
 {
   if(idle_)
     return;
+
+ros::Time time_st = ros::Time::now();
 
   cv::Mat img0, img1;
   try {
@@ -240,10 +251,17 @@ void SvoInterface::stereoCallback(
   processImageBundle({img0, img1}, msg0->header.stamp.toNSec());
   publishResults({img0, img1}, msg0->header.stamp.toNSec());
 
+ros::Duration time_1 = ros::Time::now() - time_st;
+
   if(svo_->stage() == Stage::kPaused && automatic_reinitialization_)
     svo_->start();
 
   imageCallbackPostprocessing();
+
+  ros::Duration time_2 = ros::Time::now() - time_st;
+
+logTimeCost.push_back(timeLog(msg0->header.stamp.toSec(), time_1.toSec(), time_2.toSec()));
+
 }
 
 void SvoInterface::imuCallback(const sensor_msgs::ImuConstPtr& msg)
@@ -365,6 +383,28 @@ void SvoInterface::stereoLoop()
   {
     queue.callAvailable(ros::WallDuration(0.1));
   }
+}
+
+
+//
+void SvoInterface::saveTimeLog(const string &filename) {
+
+    cout << endl << "Saving " << this->logTimeCost.size() << " records to time log file " << filename << " ..." << endl;
+
+    ofstream fFrameTimeLog;
+    fFrameTimeLog.open(filename.c_str());
+    fFrameTimeLog << fixed;
+    fFrameTimeLog << "#frame_time_stamp time_pre_proc time_post_proc" << std::endl;
+    for(size_t i=0; i<this->logTimeCost.size(); i++)
+    {
+        fFrameTimeLog << setprecision(6)
+                      << this->logTimeCost[i].time_stamp << " "
+                      << this->logTimeCost[i].time_cost_1 << " "
+                      << this->logTimeCost[i].time_cost_2 << std::endl;
+    }
+    fFrameTimeLog.close();
+
+    cout << "Finished saving log! " << endl;
 }
 
 } // namespace svo
