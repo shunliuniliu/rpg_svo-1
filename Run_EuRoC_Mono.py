@@ -41,7 +41,7 @@ for iteration in range(0, Num_Repeating):
         File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
 
         # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
-        cmd_slam   = str('roslaunch svo_ros euroc_mono_only.launch')
+        cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros euroc_mono_only.launch')
         cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
         cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -r 0.3'
         print bcolors.WARNING + "cmd_slam: \n"   + cmd_slam   + bcolors.ENDC
