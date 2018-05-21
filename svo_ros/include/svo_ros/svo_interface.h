@@ -12,6 +12,10 @@
 #include <svo/common/camera_fwd.h>
 #include <svo/common/transformation.h>
 
+#include <vector>
+
+using namespace std;
+
 namespace svo {
 
 // forward declarations
@@ -25,6 +29,19 @@ enum class PipelineType {
   kMono,
   kStereo,
   kArray
+};
+
+class timeLog {
+public:
+  timeLog(const double &t0, const double &t1, const double &t2) {
+    time_stamp = t0;
+    time_cost_1 = t1;
+    time_cost_2 = t2;
+  };
+
+  double time_stamp;
+  double time_cost_1;
+  double time_cost_2;
 };
 
 /// SVO Interface
@@ -96,6 +113,13 @@ public:
   void imuLoop();
   void monoLoop();
   void stereoLoop();
+
+
+  // save the time cost of SVO2
+  vector<timeLog> logTimeCost;
+
+  void saveTimeLog(const string &filename);
+
 };
 
 } // namespace svo
