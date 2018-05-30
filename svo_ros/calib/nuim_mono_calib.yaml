@@ -1,4 +1,4 @@
-label: "TUM"
+label: "NUIM"
 id: 412eab8e4058621f7036b5e765dfe812
 cameras:
 - camera:
@@ -11,13 +11,13 @@ cameras:
     intrinsics:
       cols: 1
       rows: 4
-      data: [520.908620, 521.007327, 325.141442, 249.701764]
+      data: [481.20, 480.00, 319.50, 239.50]
     distortion:
       type: radial-tangential
       parameters:
         cols: 1
-        rows: 5
-        data: [0.231222, -0.784899, -0.003257, -0.000105, 0.917205]
+        rows: 4
+        data: [0, 0, 0, 0]
   T_B_C:
     cols: 4
     rows: 4
