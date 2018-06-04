@@ -37,7 +37,8 @@ void SvoNodeBase::run()
   SVO_INFO_STREAM("SVO quit");
 
 //
-  svo_interface_.saveTimeLog("/home/yipuzhao/svo_install_overlay_ws/tmpLog.txt");
+  // svo_interface_.saveTimeLog("/home/yipuzhao/svo_install_overlay_ws/tmpLog.txt");
+  svo_interface_.saveTimeLog("/home/turtlebot/svo_install_overlay_ws/tmpLog.txt");
 
   svo_interface_.quit_ = true;
   SVO_INFO_STREAM("SVO terminated.\n");
