@@ -5,11 +5,11 @@ import subprocess
 import time
 import signal
 
-# SeqNameList = ['MH_01_easy'];
-# SeqNameList = ['V1_03_difficult', 'V2_02_medium', 'V2_03_difficult'];
-SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
-Number_GF_List = [2000]; # [400, 600, 800, 1000, 1500, 2000]; # 
-Result_root = '/mnt/DATA/tmp/EuRoC/SVO2_Stereo/'
+SeqNameList = ['living_room_traj0', 'living_room_traj1', 'living_room_traj2', 'living_room_traj3', 'office_room_traj0', 'office_room_traj1', 'office_room_traj2', 'office_room_traj3', 'not_exist'];
+Result_root = '/mnt/DATA/tmp/NUIM/SVO2_Baseline/'
+
+Number_GF_List = [400, 600, 800, 1000, 1500, 2000]; # [2000]; # 
+
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
@@ -39,13 +39,14 @@ for ri, num_gf in enumerate(Number_GF_List):
             
             print bcolors.ALERT + "====================================================================" + bcolors.ENDC
 
-            SeqName = SeqNameList[sn] #+ '_blur_9'
+            SeqName = SeqNameList[sn]
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
-            File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
+            File_rosbag  = '/mnt/DATA/Datasets/ICL-NUIM_dataset/BagFiles/' + SeqName  + 'n.bag'
+            File_traj = Experiment_dir + '/' + SeqName
 
             # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
-            cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros ' + 'euroc_stereo_lmk' + str(int(num_gf)) + '.launch')
+            cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros ' + 'nuim_mono_lmk' + str(int(num_gf)) + '.launch')
             cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
             cmd_timelog = str('cp /home/yipuzhao/svo_install_overlay_ws/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
             cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -u 30' # + ' -r 0.3'
