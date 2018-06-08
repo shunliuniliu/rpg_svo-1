@@ -8,8 +8,10 @@ import signal
 # SeqNameList = ['MH_01_easy'];
 # SeqNameList = ['V1_03_difficult', 'V2_02_medium', 'V2_03_difficult'];
 SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
+
 Number_GF_List = [400, 600, 800, 1000, 1500, 2000]; # [2000]; # 
-Result_root = '/mnt/DATA/tmp/EuRoC/SVO2_Mono/'
+Result_root = '/home/turtlebot/tmp/SVO2_Baseline/'
+
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
 
@@ -42,12 +44,12 @@ for ri, num_gf in enumerate(Number_GF_List):
             SeqName = SeqNameList[sn] #+ '_blur_9'
             print bcolors.ALERT + "Round: " + str(iteration + 1) + "; Seq: " + SeqName
 
-            File_rosbag  = '/mnt/DATA/Datasets/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
+            File_rosbag  = '/home/turtlebot/DATA/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
 
             # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
             cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros ' + 'euroc_mono_lmk' + str(int(num_gf)) + '.launch')
             cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
-            cmd_timelog = str('cp /home/yipuzhao/svo_install_overlay_ws/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
+            cmd_timelog = str('cp /home/turtlebot/svo_install_overlay_ws/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
             cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -u 30' # + ' -r 0.3'
             print bcolors.WARNING + "cmd_slam: \n"   + cmd_slam   + bcolors.ENDC
             print bcolors.WARNING + "cmd_record: \n" + cmd_record + bcolors.ENDC
