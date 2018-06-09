@@ -12,8 +12,8 @@
 
   </node>
 
-  <!-- RVIZ + SVO GUI  -->
+  <!-- RVIZ + SVO GUI 
   <node name="vis" pkg="rviz" type="rviz" args=" -d $(find svo_ros)/rviz_config.rviz" />
-  
+   -->
 
 </launch>

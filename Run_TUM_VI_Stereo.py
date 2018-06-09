@@ -5,12 +5,12 @@ import subprocess
 import time
 import signal
 
-SeqNameList = ['room1_512_16', 'not_exist'];
-# SeqNameList = ['room1_512_16', 'room2_512_16', 'room3_512_16', 'room4_512_16', 'room5_512_16', 'room6_512_16', 'not_exist'];
+# SeqNameList = ['room1_512_16', 'not_exist'];
+SeqNameList = ['room1_512_16', 'room2_512_16', 'room3_512_16', 'room4_512_16', 'room5_512_16', 'room6_512_16', 'not_exist'];
 
-Result_root = '/mnt/DATA/tmp/TUM_VI/SVO2_Stereo/'
+Result_root = '/mnt/DATA/tmp/TUM_VI/SVO2_Stereo_Baseline/'
 
-Number_GF_List = [2000]; # [400, 600, 800, 1000, 1500, 2000]; # 
+Number_GF_List = [400, 600, 800, 1000, 1500, 2000]; # [400]; # 
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
