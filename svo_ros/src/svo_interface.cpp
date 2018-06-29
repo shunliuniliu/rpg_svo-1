@@ -70,6 +70,7 @@ SvoInterface::SvoInterface(
 #ifdef SVO_USE_BACKEND
   if(vk::param<bool>(pnh_, "use_backend", false))
   {
+    std::cout << "===================== SVO is using backend !!! ======================" << std::endl << std::endl << std::endl;
     backend_interface_ = svo::backend_factory::makeBackend(pnh_);
     backend_visualizer_.reset(new BackendVisualizer(svo_->options_.trace_dir, pnh_));
     svo_->setBundleAdjuster(backend_interface_);
