@@ -37,7 +37,10 @@ void SvoNodeBase::run()
   SVO_INFO_STREAM("SVO quit");
 
 //
+  std::cout << "terminated! saving the time cost log!" << std::endl;
   svo_interface_.saveTimeLog("/home/yipuzhao/svo_install_overlay_ws/tmpLog.txt");
+  std::cout << "move on saving the track log!" << std::endl;
+  svo_interface_.saveAllFrameTrack("/home/yipuzhao/svo_install_overlay_ws/tmpTrack.txt");
   // svo_interface_.saveTimeLog("/home/turtlebot/svo_install_overlay_ws/tmpLog.txt");
 
   svo_interface_.quit_ = true;

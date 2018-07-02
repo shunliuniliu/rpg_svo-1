@@ -47,21 +47,17 @@ for ri, num_gf in enumerate(Number_GF_List):
 
             # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
             cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros ' + 'tum_vi_stereo_lmk' + str(int(num_gf)) + '.launch')
-            cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
             cmd_timelog = str('cp /home/yipuzhao/svo_install_overlay_ws/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
+            cmd_tracklog = str('cp /home/yipuzhao/svo_install_overlay_ws/tmpTrack.txt ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory.txt')
             cmd_rosbag = 'rosbag play ' + File_rosbag # + ' -u 30' # + ' -r 0.3'
             print bcolors.WARNING + "cmd_slam: \n"   + cmd_slam   + bcolors.ENDC
-            print bcolors.WARNING + "cmd_record: \n" + cmd_record + bcolors.ENDC
-            print bcolors.WARNING + "cmd_timelog: \n" + cmd_timelog + bcolors.ENDC
             print bcolors.WARNING + "cmd_rosbag: \n" + cmd_rosbag + bcolors.ENDC
+            print bcolors.WARNING + "cmd_timelog: \n" + cmd_timelog + bcolors.ENDC
+            print bcolors.WARNING + "cmd_tracklog: \n" + cmd_tracklog + bcolors.ENDC
 
             print bcolors.OKGREEN + "Launching SLAM" + bcolors.ENDC
             proc_slam = subprocess.Popen(cmd_slam, shell=True)
             # proc_slam = subprocess.Popen("exec " + cmd_slam, stdout=subprocess.PIPE, shell=True)
-
-            print bcolors.OKGREEN + "Recording tf" + bcolors.ENDC
-            proc_rec = subprocess.Popen(cmd_record, shell=True)
-            # proc_rec = subprocess.Popen("exec " + cmd_record, stdout=subprocess.PIPE, shell=True)
 
             print bcolors.OKGREEN + "Sleeping for a few secs to wait for svo init" + bcolors.ENDC
             time.sleep(SleepTime)
@@ -70,15 +66,13 @@ for ri, num_gf in enumerate(Number_GF_List):
             proc_bag = subprocess.call(cmd_rosbag, shell=True)
 
             print bcolors.OKGREEN + "Finished rosbag playback, kill the process" + bcolors.ENDC
-            subprocess.call('rosnode kill /rec_bag', shell=True)
             subprocess.call('rosnode kill /svo', shell=True)
             # subprocess.call('pkill roslaunch', shell=True)
             # subprocess.call('pkill svo_node', shell=True)
 
-            print bcolors.OKGREEN + "Sleeping for a few secs to wait for svo quit" + bcolors.ENDC
+            print bcolors.OKGREEN + "Sleeping for a few secs to wait for svo to quit" + bcolors.ENDC
             time.sleep(SleepTime)
             print bcolors.OKGREEN + "Copy the time log to result folder" + bcolors.ENDC
             subprocess.call(cmd_timelog, shell=True)
-            # proc_rec.terminate()
-            # outs, errs = proc_rec.communicate()
-            # proc_slam.kill()
+            print bcolors.OKGREEN + "Copy the track to result folder" + bcolors.ENDC
+            subprocess.call(cmd_tracklog, shell=True)

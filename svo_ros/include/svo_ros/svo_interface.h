@@ -31,6 +31,8 @@ enum class PipelineType {
   kArray
 };
 
+
+
 class timeLog {
 public:
   timeLog(const double &t0, const double &t1, const double &t2) {
@@ -43,6 +45,34 @@ public:
   double time_cost_1;
   double time_cost_2;
 };
+
+class trackLog {
+public:
+  trackLog(const double &timeStamp_, const double &Tx_, const double &Ty_, const double &Tz_, 
+	   const double &Qx_, const double &Qy_, const double &Qz_, const double &Qw_) {
+    //
+    time_stamp = timeStamp_;
+    position(0) = Tx_;
+    position(1) = Ty_;
+    position(2) = Tz_;
+    orientation(0) = Qx_;
+    orientation(1) = Qy_;
+    orientation(2) = Qz_;
+    orientation(3) = Qw_;
+  };
+
+  double time_stamp;
+    // Orientation
+  // Take a vector from the world frame to
+  // the IMU (body) frame.
+  Eigen::Vector4d orientation;
+
+  // Position of the IMU (body) frame
+  // in the world frame.
+  Eigen::Vector3d position;
+};
+
+
 
 /// SVO Interface
 class SvoInterface
@@ -118,7 +148,11 @@ public:
   // save the time cost of SVO2
   vector<timeLog> logTimeCost;
 
-  void saveTimeLog(const string &filename);
+  void saveTimeLog(const std::string &filename);
+  
+  std::vector<trackLog> logFramePose;
+
+void saveAllFrameTrack(const std::string &filename);
 
 };
 
