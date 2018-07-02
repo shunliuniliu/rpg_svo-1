@@ -70,6 +70,7 @@ SvoInterface::SvoInterface(
 #ifdef SVO_USE_BACKEND
   if(vk::param<bool>(pnh_, "use_backend", false))
   {
+    std::cout << "===================== SVO is using backend !!! ======================" << std::endl << std::endl << std::endl;
     backend_interface_ = svo::backend_factory::makeBackend(pnh_);
     backend_visualizer_.reset(new BackendVisualizer(svo_->options_.trace_dir, pnh_));
     svo_->setBundleAdjuster(backend_interface_);
@@ -110,11 +111,13 @@ void SvoInterface::publishResults(
       visualizer_->publishImuPose(
             svo_->getLastFrames()->get_T_W_B(), Covariance, timestamp_nanoseconds);
       visualizer_->publishCameraPoses(svo_->getLastFrames(), timestamp_nanoseconds);
+ /*
       visualizer_->publishImagesWithFeatures(
             svo_->getLastFrames(), timestamp_nanoseconds);
       visualizer_->visualizeMarkers(
             svo_->getLastFrames(), svo_->closeKeyframes(), svo_->map());
       visualizer_->exportToDense(svo_->getLastFrames());
+*/
       break;
     }
     case Stage::kInitializing: {
@@ -192,8 +195,6 @@ void SvoInterface::monoCallback(const sensor_msgs::ImageConstPtr& msg)
   if(idle_)
     return;
 
-ros::Time time_st = ros::Time::now();
-
   cv::Mat image;
   try
   {
@@ -203,6 +204,10 @@ ros::Time time_st = ros::Time::now();
   {
     ROS_ERROR("cv_bridge exception: %s", e.what());
   }
+  
+  
+  double start_time = (double) cv::getTickCount();
+  
 
   std::vector<cv::Mat> images;
   images.push_back(image.clone());
@@ -212,18 +217,42 @@ ros::Time time_st = ros::Time::now();
   imageCallbackPreprocessing(msg->header.stamp.toNSec());
 
   processImageBundle(images, msg->header.stamp.toNSec());
+    
+  
+  double time_1 = ((double) cv::getTickCount() - start_time)/cv::getTickFrequency();
+  // std::cout  << "TIme cost of processImageBundle = " << time_1 * 1000 << std::endl;
+
   publishResults(images, msg->header.stamp.toNSec());
 
-ros::Duration time_1 = ros::Time::now() - time_st;
+  
+      Transformation tmp_T = svo_->getLastFrames()->get_T_W_C();
+      Position tmp_P = tmp_T.getPosition();
+      Eigen::Quaterniond tmp_Q = tmp_T.getEigenQuaternion();
+      	      logFramePose.push_back( trackLog( msg->header.stamp.toSec(), 
+					    tmp_P(0,0), 
+					    tmp_P(1,0), 
+					    tmp_P(2,0), 
+					    tmp_Q.x(),
+					    tmp_Q.y(),
+					    tmp_Q.z(),
+					    tmp_Q.w() ) );
+	
+	      /*
+std::cout << "Published camera pose: "
+	      << tmp_P(0,0) << " " << tmp_P(1,0) << " " << tmp_P(2,0) << "; "
+	      << tmp_Q.x() << " " << tmp_Q.y() << " " << tmp_Q.z() << " " << tmp_Q.w() << std::endl;
+	      */
+	      
 
   if(svo_->stage() == Stage::kPaused && automatic_reinitialization_)
     svo_->start();
 
   imageCallbackPostprocessing();
 
-ros::Duration time_2 = ros::Time::now() - time_st;
+double time_2 = ((double) cv::getTickCount() - start_time)/cv::getTickFrequency();
+//  std::cout  << "TIme cost of publish and post processing  = " << time_2 * 1000 << std::endl;
 
-logTimeCost.push_back(timeLog(msg->header.stamp.toSec(), time_1.toSec(), time_2.toSec()));
+logTimeCost.push_back(timeLog(msg->header.stamp.toSec(), time_1, time_2));
 
 }
 
@@ -234,7 +263,6 @@ void SvoInterface::stereoCallback(
   if(idle_)
     return;
 
-ros::Time time_st = ros::Time::now();
 
   cv::Mat img0, img1;
   try {
@@ -243,24 +271,59 @@ ros::Time time_st = ros::Time::now();
   } catch (cv_bridge::Exception& e) {
     ROS_ERROR("cv_bridge exception: %s", e.what());
   }
+  
+  
+double start_time = (double) cv::getTickCount();
+
+
 
   setImuPrior(msg0->header.stamp.toNSec());
 
   imageCallbackPreprocessing(msg0->header.stamp.toNSec());
 
   processImageBundle({img0, img1}, msg0->header.stamp.toNSec());
-  publishResults({img0, img1}, msg0->header.stamp.toNSec());
+  
+  
+  double time_1 = ((double) cv::getTickCount() - start_time)/cv::getTickFrequency();
+  // std::cout  << "TIme cost of processImageBundle = " << time_1 * 1000 << std::endl;
 
-ros::Duration time_1 = ros::Time::now() - time_st;
+  
+  
+  publishResults({img0, img1}, msg0->header.stamp.toNSec());
+  
+  
+  
+  Transformation tmp_T = svo_->getLastFrames()->get_T_W_C();
+      Position tmp_P = tmp_T.getPosition();
+      Eigen::Quaterniond tmp_Q = tmp_T.getEigenQuaternion();
+      	      logFramePose.push_back( trackLog( msg0->header.stamp.toSec(), 
+					    tmp_P(0,0), 
+					    tmp_P(1,0), 
+					    tmp_P(2,0), 
+					    tmp_Q.x(),
+					    tmp_Q.y(),
+					    tmp_Q.z(),
+					    tmp_Q.w() ) );
+	
+	      /*
+std::cout << "Published camera pose: "
+	      << tmp_P(0,0) << " " << tmp_P(1,0) << " " << tmp_P(2,0) << "; "
+	      << tmp_Q.x() << " " << tmp_Q.y() << " " << tmp_Q.z() << " " << tmp_Q.w() << std::endl;
+	      */
+	      
+	      
+
 
   if(svo_->stage() == Stage::kPaused && automatic_reinitialization_)
     svo_->start();
 
   imageCallbackPostprocessing();
 
-  ros::Duration time_2 = ros::Time::now() - time_st;
 
-logTimeCost.push_back(timeLog(msg0->header.stamp.toSec(), time_1.toSec(), time_2.toSec()));
+double time_2 = ((double) cv::getTickCount() - start_time)/cv::getTickFrequency();
+//  std::cout  << "TIme cost of publish and post processing  = " << time_2 * 1000 << std::endl;
+
+logTimeCost.push_back(timeLog(msg0->header.stamp.toSec(), time_1, time_2));
 
 }
 
@@ -389,22 +452,45 @@ void SvoInterface::stereoLoop()
 //
 void SvoInterface::saveTimeLog(const string &filename) {
 
-    cout << endl << "Saving " << this->logTimeCost.size() << " records to time log file " << filename << " ..." << endl;
+    std::cout << std::endl << "Saving " << this->logTimeCost.size() << " records to time log file " << filename << " ..." << std::endl;
 
-    ofstream fFrameTimeLog;
+    std::ofstream fFrameTimeLog;
     fFrameTimeLog.open(filename.c_str());
-    fFrameTimeLog << fixed;
+    fFrameTimeLog << std::fixed;
     fFrameTimeLog << "#frame_time_stamp time_pre_proc time_post_proc" << std::endl;
     for(size_t i=0; i<this->logTimeCost.size(); i++)
     {
-        fFrameTimeLog << setprecision(6)
+        fFrameTimeLog << std::setprecision(6)
                       << this->logTimeCost[i].time_stamp << " "
                       << this->logTimeCost[i].time_cost_1 << " "
                       << this->logTimeCost[i].time_cost_2 << std::endl;
     }
     fFrameTimeLog.close();
 
-    cout << "Finished saving log! " << endl;
+    std::cout << "Finished saving log! " << std::endl;
 }
+
+
+void SvoInterface::saveAllFrameTrack(const std::string &filename) {
+  
+  std::cout << std::endl << "Saving " << this->logFramePose.size() << " records to track file " << filename << " ..." << std::endl;
+
+    std::ofstream f_realTimeTrack;
+    f_realTimeTrack.open(filename.c_str());
+    f_realTimeTrack << std::fixed;
+    f_realTimeTrack << "#TimeStamp Tx Ty Tz Qx Qy Qz Qw" << std::endl;
+    for(size_t i=0; i<this->logFramePose.size(); i++)
+    {
+      f_realTimeTrack << std::setprecision(6)
+			<< this->logFramePose[i].time_stamp << " "
+			<< std::setprecision(7)
+			<< this->logFramePose[i].position.transpose() << " "
+			<< this->logFramePose[i].orientation.transpose() << std::endl;
+    }
+    f_realTimeTrack.close();
+
+    std::cout << "Finished saving track! " << std::endl;
+}
+
 
 } // namespace svo
