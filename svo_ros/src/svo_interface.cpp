@@ -224,7 +224,8 @@ void SvoInterface::monoCallback(const sensor_msgs::ImageConstPtr& msg)
 
   publishResults(images, msg->header.stamp.toNSec());
 
-  
+  if (svo_->stage() == Stage::kTracking)
+  {
       Transformation tmp_T = svo_->getLastFrames()->get_T_W_C();
       Position tmp_P = tmp_T.getPosition();
       Eigen::Quaterniond tmp_Q = tmp_T.getEigenQuaternion();
@@ -242,7 +243,7 @@ std::cout << "Published camera pose: "
 	      << tmp_P(0,0) << " " << tmp_P(1,0) << " " << tmp_P(2,0) << "; "
 	      << tmp_Q.x() << " " << tmp_Q.y() << " " << tmp_Q.z() << " " << tmp_Q.w() << std::endl;
 	      */
-	      
+  }	      
 
   if(svo_->stage() == Stage::kPaused && automatic_reinitialization_)
     svo_->start();
