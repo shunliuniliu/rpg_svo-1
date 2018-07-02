@@ -9,7 +9,7 @@ import signal
 # SeqNameList = ['V1_03_difficult', 'V2_02_medium', 'V2_03_difficult'];
 SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
 
-Number_GF_List = [400, 600, 800, 1000, 1500, 2000]; # [2000]; # 
+Number_GF_List = [200, 300, 400, 600, 800, 1000, 1500, 2000]; # [2000]; # 
 Result_root = '/mnt/DATA/tmp/EuRoC/SVO2_Mono_Baseline/'
 # Result_root = '/home/turtlebot/tmp/SVO2_Baseline/'
 
@@ -86,3 +86,5 @@ for ri, num_gf in enumerate(Number_GF_List):
             subprocess.call(cmd_timelog, shell=True)
             print bcolors.OKGREEN + "Copy the track to result folder" + bcolors.ENDC
             subprocess.call(cmd_tracklog, shell=True)
+
+            subprocess.call('pkill svo_node', shell=True)
