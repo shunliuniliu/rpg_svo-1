@@ -1,0 +1,15 @@
+#include "svo_ros/svo_node_base.h"
+
+int main(int argc, char **argv)
+{
+<<<<<<< HEAD
+	for (int i=0; i<argc; ++i)
+	cout << "argv[i] = " << argv[i] << endl;
+
+=======
+>>>>>>> upstream/master
+  svo_ros::SvoNodeBase::initThirdParty(argc, argv);
+
+  svo_ros::SvoNodeBase node;
+  node.run();
+}
