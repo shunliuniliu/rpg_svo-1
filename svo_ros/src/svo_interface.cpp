@@ -111,13 +111,13 @@ void SvoInterface::publishResults(
       visualizer_->publishImuPose(
             svo_->getLastFrames()->get_T_W_B(), Covariance, timestamp_nanoseconds);
       visualizer_->publishCameraPoses(svo_->getLastFrames(), timestamp_nanoseconds);
- /*
+ 
       visualizer_->publishImagesWithFeatures(
             svo_->getLastFrames(), timestamp_nanoseconds);
       visualizer_->visualizeMarkers(
             svo_->getLastFrames(), svo_->closeKeyframes(), svo_->map());
       visualizer_->exportToDense(svo_->getLastFrames());
-*/
+
       break;
     }
     case Stage::kInitializing: {

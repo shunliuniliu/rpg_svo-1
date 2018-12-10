@@ -57,6 +57,8 @@ public:
   std::vector<ros::Publisher> pub_dense_;
   std::vector<image_transport::Publisher> pub_images_;
   ros::Publisher pub_loop_closure_;
+  //
+  ros::Publisher pub_msf_poses_;
 
   tf::TransformBroadcaster br_;
   bool publish_world_in_cam_frame_;

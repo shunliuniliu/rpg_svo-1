@@ -7,10 +7,11 @@ import signal
 
 # SeqNameList = ['MH_01_easy'];
 # SeqNameList = ['V1_03_difficult', 'V2_02_medium', 'V2_03_difficult'];
-SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
+# SeqNameList = ['MH_01_easy', 'MH_02_easy', 'MH_03_medium', 'MH_04_difficult', 'MH_05_difficult', 'V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult'];
+SeqNameList = ['V1_01_easy', 'V1_02_medium', 'V1_03_difficult', 'V2_01_easy', 'V2_02_medium', 'V2_03_difficult', 'V1_01_easy_blur_5', 'V1_02_medium_blur_5', 'V1_03_difficult_blur_5', 'V2_01_easy_blur_5', 'V2_02_medium_blur_5', 'V2_03_difficult_blur_5'];
 
-Number_GF_List = [400, 600, 800, 1000, 1500, 2000]; # 
-Result_root = '/mnt/DATA/tmp/EuRoC/SVO2_Stereo_Baseline/'
+Number_GF_List = [200, 300, 400]; # [400, 600, 800, 1000, 1500, 2000]; # 
+Result_root = '/mnt/DATA/tmp/EuRoC/SVO2_Stereo/'
 
 Num_Repeating = 10 # 20 #  5 # 
 SleepTime = 5
@@ -48,7 +49,7 @@ for ri, num_gf in enumerate(Number_GF_List):
             # File_rosbag  = '/home/turtlebot/DATA/EuRoC_dataset/BagFiles/' + SeqName + '.bag'
 
             # rosrun ORB_SLAM2 Mono PATH_TO_VOCABULARY PATH_TO_SETTINGS_FILE
-            cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.0 roslaunch svo_ros ' + 'euroc_stereo_lmk' + str(int(num_gf)) + '.launch')
+            cmd_slam   = str('LD_PRELOAD=~/svo_install_ws/install/lib/libgflags.so.2.2.1 roslaunch svo_ros ' + 'euroc_stereo_lmk' + str(int(num_gf)) + '.launch')
             # cmd_record = str('rosbag record -O ' + Experiment_dir + '/' + SeqName + '_tf /tf __name:=rec_bag')
             cmd_timelog = str('cp /home/yipuzhao/svo_install_overlay_ws/tmpLog.txt ' + Experiment_dir + '/' + SeqName + '_Log.txt')
             cmd_tracklog = str('cp /home/yipuzhao/svo_install_overlay_ws/tmpTrack.txt ' + Experiment_dir + '/' + SeqName + '_AllFrameTrajectory.txt')
